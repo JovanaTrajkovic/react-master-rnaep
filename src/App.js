@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import PokemonList from './PokemonList';
+import PokemonDetails from './PokemonDetails';
+import './Pokemon.css'; 
 
-function App() {
+const App = () => {
+  const [pokemonList, setPokemonList] = useState([]);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10');
+        setPokemonList(response.data.results);
+      } catch (error) {
+        console.error('Error fetching Pokémon data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handlePokemonClick = (pokemon) => {
+    setSelectedPokemon(pokemon);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedPokemon(null);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className="container"> 
+    <h1>My Pokémon App</h1>
+    {selectedPokemon ? (
+      <PokemonDetails pokemon={selectedPokemon} onClose={handleCloseDetails} />
+    ) : (
+      <PokemonList pokemonList={pokemonList} onPokemonClick={handlePokemonClick} />
+    )}
+  </div>
   );
-}
+};
 
 export default App;
