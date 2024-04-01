@@ -1,44 +1,28 @@
-// App.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch, Routes } from "react-router-dom";
+
 import PokemonList from './PokemonList';
 import PokemonDetails from './PokemonDetails';
-import './Pokemon.css'; 
+import Contact from './Contact';
+import HomePage from  './HomePage';
+import Navbar from './NavBar.js';
+import Cart from './Cart.jsx';
+
 
 const App = () => {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10');
-        setPokemonList(response.data.results);
-      } catch (error) {
-        console.error('Error fetching Pokémon data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handlePokemonClick = (pokemon) => {
-    setSelectedPokemon(pokemon);
-  };
-
-  const handleCloseDetails = () => {
-    setSelectedPokemon(null);
-  };
-
+ 
   return (
-    <div className="container"> 
-    <h1>My Pokémon App</h1>
-    {selectedPokemon ? (
-      <PokemonDetails pokemon={selectedPokemon} onClose={handleCloseDetails} />
-    ) : (
-      <PokemonList pokemonList={pokemonList} onPokemonClick={handlePokemonClick} />
-    )}
-  </div>
+    <Router>
+      <div className="container">
+        <Navbar />
+        <Routes>
+      
+        <Route path='/' element = {<HomePage />}/>
+        <Route path='/contact' element = {<Contact/>}/>
+        <Route path='/cart' element = {<Cart />}/>
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
